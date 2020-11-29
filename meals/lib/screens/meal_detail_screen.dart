@@ -3,18 +3,24 @@ import 'package:flutter/material.dart';
 import '../models/meal.dart';
 
 class MealDetailScreen extends StatelessWidget {
+  final Function(Meal) onToggleFavorite;
+  final bool Function(Meal) isFavorite;
+
+  const MealDetailScreen(this.onToggleFavorite, this.isFavorite);
+
   Widget _createSectionTitle(BuildContext context, String title) {
     return Container(
-        margin: EdgeInsets.symmetric(vertical: 10),
-        child: Text(
-          title,
-          style: Theme.of(context).textTheme.headline6,
-        ));
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.headline6,
+      ),
+    );
   }
 
   Widget _createSectionContainer(Widget child) {
     return Container(
-      width: 300,
+      width: 330,
       height: 200,
       padding: EdgeInsets.all(10),
       margin: EdgeInsets.all(10),
@@ -54,7 +60,9 @@ class MealDetailScreen extends StatelessWidget {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 10),
+                        vertical: 5,
+                        horizontal: 10,
+                      ),
                       child: Text(meal.ingredients[index]),
                     ),
                     color: Theme.of(context).accentColor,
@@ -68,7 +76,7 @@ class MealDetailScreen extends StatelessWidget {
                 itemCount: meal.steps.length,
                 itemBuilder: (ctx, index) {
                   return Column(
-                    children: [
+                    children: <Widget>[
                       ListTile(
                         leading: CircleAvatar(
                           child: Text('${index + 1}'),
@@ -80,9 +88,15 @@ class MealDetailScreen extends StatelessWidget {
                   );
                 },
               ),
-            )
+            ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(isFavorite(meal) ? Icons.star : Icons.star_border),
+        onPressed: () {
+          onToggleFavorite(meal);
+        },
       ),
     );
   }
